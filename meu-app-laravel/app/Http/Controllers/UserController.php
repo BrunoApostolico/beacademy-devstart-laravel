@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use function GuzzleHttp\default_user_agent;
 
 class UserController extends Controller
 {
@@ -69,5 +70,16 @@ class UserController extends Controller
         $user->update($data);
 
         return redirect()->route('users.index');
+    }
+
+    public function destroy($id)
+    {
+        if(!$user = $this->model->find($id))
+            return redirect()->route('users.index');
+
+        $user->delete();
+
+        return redirect()->route('users.index');
+
     }
 }
