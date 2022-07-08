@@ -13,7 +13,7 @@
     </div>
 @endif
 
-<form action="{{ route('users.store') }}" method="POST">
+<form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="mb-3">
         <label for="name" class="form-label">Nome</label>
@@ -26,6 +26,10 @@
     <div class="mb-3">
         <label for="password" class="form-label">Senha</label>
         <input type="password" class="form-control" id="password" name="password">
+    </div>
+    <div class="mb-3">
+        <label for="image" class="form-label">Selecione uma Imagem</label>
+        <input type="file" class="form-control form-control-md" id="image" name="image">
     </div>
     <button type="submit" class="btn btn-primary">Enviar</button>
 </form>
