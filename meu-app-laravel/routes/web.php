@@ -12,6 +12,7 @@ Route::get('/' , function(){
 });
 
 Route::get('/posts',[PostController::class,'index'])->name('posts.index');
+Route::get('/users/{id}/posts',[PostController::class,'show'])->name('posts.show');
 
 Route::delete('/users/{id}',[UserController::class, 'destroy'])->name('users.destroy');
 Route::put('/users/{id}',[UserController::class, 'update'])->name('users.update');
