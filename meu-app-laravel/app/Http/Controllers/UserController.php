@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreUpdateUserFormRequest;
+use App\Models\Team;
 use Illuminate\Http\Request;
 use App\Models\User;
 use function GuzzleHttp\default_user_agent;
@@ -14,13 +15,14 @@ class UserController extends Controller
         $this->model = $user;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-//        $users = User::all();
-        $users = User::paginate(5);
-        return view ('users.index', compact('users'));
 
-       // dd($users); //dump e die
+        $users = $this->model->getUsers(
+            $request->search ?? ''
+        );
+
+        return view ('users.index', compact('users'));
     }
 
     public function show($id)
@@ -28,7 +30,11 @@ class UserController extends Controller
         if (!$user = User::find($id))
             return redirect()->route('users.index');
 
-        $title = 'Usuario '.$user->name;
+//        $team = Team::find($id);
+//        $team->load('users');
+//        return $team;
+
+         $title = 'Usuario '.$user->name;
         return view('users.show', compact('user','title'));
     }
 
