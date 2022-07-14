@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\UserControllerException;
 use App\Http\Requests\StoreUpdateUserFormRequest;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -27,15 +28,18 @@ class UserController extends Controller
 
     public function show($id)
     {
-        if (!$user = User::find($id))
-            return redirect()->route('users.index');
+//        if (!$user = User::find($id))
+//            return redirect()->route('users.index');
 
-//        $team = Team::find($id);
-//        $team->load('users');
-//        return $team;
+        $user = User::find($id);
 
-         $title = 'Usuario '.$user->name;
-        return view('users.show', compact('user','title'));
+        if($user){
+            return view('users.show',compact('user'));
+        }else{
+            throw new UserControllerException('User não encontrado');
+        }
+
+//        return view('users.show', compact('user'));
     }
 
     public function create()
@@ -60,10 +64,11 @@ class UserController extends Controller
             $data['image'] = $path;
         }
 
-
         $this->model->create($data);
 
+        $request->session()->flash('create', 'Usuário cadastrado com sucesso');
         return redirect()->route('users.index');
+
     }
 
     public function edit($id)
@@ -82,9 +87,12 @@ class UserController extends Controller
 
         if($request->password)
             $data['password']= bcrypt($request->password);
+
+        $data['is_admin'] = $request->admin ? 1 : 0;
+
         $user->update($data);
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('edit','Usuário atualizado com sucesso!');
     }
 
     public function destroy($id)
@@ -94,7 +102,11 @@ class UserController extends Controller
 
         $user->delete();
 
-        return redirect()->route('users.index');
+        return redirect()->route('users.index')->with('destroy','Usuário deletado com sucesso!');
 
+    }
+    public function admin()
+    {
+        return view('admin.index');
     }
 }
