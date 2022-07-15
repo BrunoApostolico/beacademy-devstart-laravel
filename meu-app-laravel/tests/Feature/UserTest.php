@@ -22,4 +22,15 @@ class UserTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_create_user()
+    {
+        $response = $this->post('/login/create',[
+            'name' => 'Admin',
+            'email' => 'admin@master.com',
+            'password' => '1q2w3e4r',
+            'is_admin' => ','
+        ]);
+        $response->assertStatus(200);
+    }
 }
